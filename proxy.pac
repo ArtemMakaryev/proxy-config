@@ -1,15 +1,22 @@
 /**
  * proxy.pac
- * Маршрутизирует трафик к выбранным ресурсам через прокси с аутентификацией
+ * Маршрутизирует трафик к выбранным ресурсам через прокси
  * HTTP-прокси: 77.71.99.118:50100
  * SOCKС-прокси: 77.71.99.118:50101
- * Логин: artemmakaryev
- * Всё остальное идёт DIRECT.
+ * Логин: artemmakaryev, Пароль: n7zrbfb5n7
  */
-var HTTP_PROXY = "PROXY artemmakaryev:n7zrbfb5n7@77.71.99.118:50100";
-var SOCKS_PROXY = "SOCKS artemmakaryev:n7zrbfb5n7@77.71.99.118:50101";
-var PROXY_CHAIN = HTTP_PROXY + "; " + SOCKS_PROXY;
-var DIRECT  = "DIRECT";
+
+// PAC-файл с учетными данными
+function FindProxyForURL(url, host) {
+  // Проверяем, нужен ли прокси для этого хоста
+  for (var i = 0; i < needProxy.length; i++) {
+    if (hostEndsWith(host, needProxy[i])) {
+      // Данные аутентификации прямо в строке настроек прокси
+      return "PROXY artemmakaryev:n7zrbfb5n7@77.71.99.118:50100; SOCKS5 artemmakaryev:n7zrbfb5n7@77.71.99.118:50101";
+    }
+  }
+  return "DIRECT";
+}
 
 var needProxy = [
   // Соцсети
@@ -106,13 +113,4 @@ var needProxy = [
 function hostEndsWith(host, suffix) {
   // true для exact match и поддоменов: *.suffix
   return host === suffix || host.slice(-suffix.length - 1) === "." + suffix;
-}
-
-function FindProxyForURL(url, host) {
-  for (var i = 0; i < needProxy.length; i++) {
-    if (hostEndsWith(host, needProxy[i])) {
-      return PROXY_CHAIN;
-    }
-  }
-  return DIRECT;
 }
