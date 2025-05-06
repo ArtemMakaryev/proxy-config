@@ -1,9 +1,14 @@
 /**
  * proxy.pac
- * Маршрутизирует трафик к выбранным ресурсам через PROXY 213.153.88.34:8080
+ * Маршрутизирует трафик к выбранным ресурсам через прокси с аутентификацией
+ * HTTP-прокси: 77.71.99.118:50100
+ * SOCKС-прокси: 77.71.99.118:50101
+ * Логин: artemmakaryev
  * Всё остальное идёт DIRECT.
  */
-var PROXY   = "PROXY 213.153.88.34:8080";
+var HTTP_PROXY = "PROXY artemmakaryev:n7zrbfb5n7@77.71.99.118:50100";
+var SOCKS_PROXY = "SOCKS artemmakaryev:n7zrbfb5n7@77.71.99.118:50101";
+var PROXY_CHAIN = HTTP_PROXY + "; " + SOCKS_PROXY;
 var DIRECT  = "DIRECT";
 
 var needProxy = [
@@ -106,7 +111,7 @@ function hostEndsWith(host, suffix) {
 function FindProxyForURL(url, host) {
   for (var i = 0; i < needProxy.length; i++) {
     if (hostEndsWith(host, needProxy[i])) {
-      return PROXY;
+      return PROXY_CHAIN;
     }
   }
   return DIRECT;
